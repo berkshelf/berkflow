@@ -67,7 +67,7 @@ module Berkflow
 
     desc "upgrade ENV APP VERSION", "upgrade an environment to a specific application version."
     def upgrade(environment, application, version)
-      validate_version!(version)
+      version  = sanitize_version(version)
       env      = find_environment!(environment)
       cookbook = find_cookbook!(application, version)
 
@@ -111,9 +111,8 @@ module Berkflow
         Berkshelf::Config.instance
       end
 
-      def validate_version!(version)
-        Solve::Version.split(version)
-        true
+      def sanitize_version(version)
+        Solve::Version.new(version).to_s
       rescue Solve::Errors::InvalidVersionFormat
         error "Invalid version: #{version}. Provide a valid SemVer version string. (i.e. 1.2.3)."
         exit(1)
