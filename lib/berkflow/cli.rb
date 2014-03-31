@@ -1,8 +1,5 @@
-require 'thor'
 require 'berkflow'
-require 'ridley'
-require 'ridley-connectors'
-require 'berkshelf'
+require 'thor'
 require 'solve'
 require 'tempfile'
 
@@ -46,7 +43,6 @@ module Berkflow
 
     desc "upgrade ENV APP VERSION", "upgrade an environment to a specific application version."
     def upgrade(environment, application, version)
-      Berkshelf.logger.level = ::Logger::INFO
       validate_version!(version)
       env      = find_environment!(environment)
       cookbook = find_cookbook!(application, version)
