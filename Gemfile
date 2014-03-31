@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in berkflow.gemspec
 gemspec
+
+gem "berkshelf", path: "~/code/berkshelf"
+gem "ridley", path: "~/code/ridley"
