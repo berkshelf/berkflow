@@ -29,8 +29,8 @@ module Berkflow
       aliases: "-d",
       default: false
 
-    desc "execute ENV CMD", "execute an arbitrary shell command on all nodes in an environment."
-    def execute(environment, command)
+    desc "exec ENV CMD", "execute an arbitrary shell command on all nodes in an environment."
+    def exec(environment, command)
       env = find_environment!(environment)
 
       say "Discovering nodes in #{environment}..."
