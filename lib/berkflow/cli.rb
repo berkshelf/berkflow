@@ -5,6 +5,30 @@ require 'tempfile'
 
 module Berkflow
   class Cli < Thor
+    def initialize(*args)
+      super(*args)
+
+      if @options[:verbose]
+        Ridley.logger.level = ::Logger::INFO
+      end
+
+      if @options[:debug]
+        Ridley.logger.level = ::Logger::DEBUG
+      end
+    end
+
+    class_option :verbose,
+      type: :boolean,
+      desc: "Output verbose information",
+      aliases: "-v",
+      default: false
+
+    class_option :debug,
+      type: :boolean,
+      desc: "Output debug information",
+      aliases: "-d",
+      default: false
+
     desc "execute ENV CMD", "execute an arbitrary shell command on all nodes in an environment."
     def execute(environment, command)
       env = find_environment!(environment)
