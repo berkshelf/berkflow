@@ -41,7 +41,7 @@ GIT
 PATH
   remote: .
   specs:
-    berkflow (0.0.1)
+    berkflow (0.1.0)
       berkshelf (~> 3.0.0.beta7)
       ridley (~> 2.5)
       ridley-connectors (~> 1.7.0)

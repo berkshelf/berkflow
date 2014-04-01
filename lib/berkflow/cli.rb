@@ -18,6 +18,10 @@ module Berkflow
       end
     end
 
+    namespace "berkflow"
+
+    map "up" => :upgrade
+
     class_option :verbose,
       type: :boolean,
       desc: "Output verbose information",
