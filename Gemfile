@@ -2,5 +2,5 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem "berkshelf", path: "~/code/berkshelf"
-gem "ridley", path: "~/code/ridley"
+gem "berkshelf", github: "berkshelf/berkshelf"
+gem "ridley", github: "RiotGames/ridley"
