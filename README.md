@@ -2,6 +2,8 @@
 
 A command line tool for managing Chef Environments using Berkshelf and the [Environment Cookbook Pattern](http://vialstudios.logdown.com/posts/166848-the-environment-cookbook-pattern).
 
+TLDR; of the Environment Cookbook Pattern. You have one top level cookbook that is locked to a Chef Environment. One application per Chef Environment. This Chef Environment is named `{application_name}-{environment}` (i.e. "myface-dev").
+
 ## Installation
 
     $ gem install berkflow
@@ -30,6 +32,30 @@ Your Chef Server must meet the following requirements:
 > Note: earlier versions of Berkshelf generated a chefignore file that included the Berksfile.lock. This will prevent your Berksfile.lock from being uploaded. Remove this line from the chefignore of your cookbook. This has been fixed in Berkshelf master and will ship with Berkshelf 3.0.
 
 By default, the user you are logged into your current machine and your default id_rsa key will be used for SSH authentication. See the help menu for how to override SSH settings.
+
+### Running Chef Client on a Chef Environment
+
+Berkflow has you covered if you just want to run Chef Client on all the nodes in your Chef Environment.
+
+    $ blo run_chef myface-dev
+    Discovering nodes in myface-dev...
+    Running Chef Client on 10 nodes...
+    Successfully ran Chef Client on 10 nodes
+    Done. See berkflow_out/20140331180610 for logs.
+
+### Running shell commands on a Chef Environment
+
+Running arbitrary shell commands is possible, too!
+
+    $ blo exec myface-dev "ls -lah"
+    Discovering nodes in myface-dev...
+    Executing command on 10 nodes...
+    Successfully executed command on 10 nodes
+    Done. See berkflow_out/20140331180708 for logs.
+
+Shell commands executed with `blo exec` are by default not run with sudo. Use the --sudo flag to elevate.
+
+    $ blo exec myface-dev "ls -lah" --sudo
 
 ## Contributing
 
