@@ -2,6 +2,7 @@ require 'berkflow'
 require 'thor'
 require 'solve'
 require 'tempfile'
+require 'fileutils'
 
 module Berkflow
   class Cli < Thor
@@ -22,13 +23,31 @@ module Berkflow
       desc: "Output verbose information",
       aliases: "-v",
       default: false
-
     class_option :debug,
       type: :boolean,
       desc: "Output debug information",
       aliases: "-d",
       default: false
+    class_option :ssh_user,
+      type: :string,
+      desc: "SSH user to execute commands as",
+      aliases: "-u",
+      default: ENV["USER"]
+    class_option :ssh_password,
+      type: :string,
+      desc: "Perform SSH authentication with the given password",
+      aliases: "-p",
+      default: nil
+    class_option :ssh_key,
+      type: :string,
+      desc: "Perform SSH authentication with the given key",
+      aliases: "-P",
+      default: nil
 
+    method_option :sudo,
+      type: :boolean,
+      desc: "Execute with sudo",
+      default: false
     desc "exec ENV CMD", "execute an arbitrary shell command on all nodes in an environment."
     def exec(environment, command)
       env = find_environment!(environment)
@@ -42,9 +61,18 @@ module Berkflow
       end
 
       say "Executing command on #{nodes.length} nodes..."
-      nodes.each { |node| ridley.node.run(node.public_hostname, command) }
+      success, failures, out = handle_results nodes.map { |node| ridley.node.run(node.public_hostname, command) }
 
-      say "Done."
+      unless success.empty?
+        say "Successfully executed command on #{success.length} nodes"
+      end
+
+      unless failures.empty?
+        error "Failed to execute command on #{failures.length} nodes"
+      end
+
+      say "Done. See #{out} for logs."
+      failures.empty? ? exit(0) : exit(1)
     end
 
     desc "run_chef ENV", "run chef on all nodes in the given environment."
@@ -60,9 +88,18 @@ module Berkflow
       end
 
       say "Running Chef Client on #{nodes.length} nodes..."
-      nodes.each { |node| ridley.node.chef_run(node.public_hostname) }
+      success, failures, out = handle_results nodes.map { |node| ridley.node.chef_run(node.public_hostname) }
 
-      say "Done."
+      unless success.empty?
+        say "Successfully ran Chef Client on #{success.length} nodes"
+      end
+
+      unless failures.empty?
+        error "Failed to run Chef Client on #{failures.length} nodes"
+      end
+
+      say "Done. See #{out} for logs."
+      failures.empty? ? exit(0) : exit(1)
     end
 
     desc "upgrade ENV APP VERSION", "upgrade an environment to a specific application version."
@@ -84,18 +121,7 @@ module Berkflow
         exit(1)
       end
 
-      say "Discovering nodes in #{environment}..."
-      nodes = find_nodes(environment)
-
-      if nodes.empty?
-        say "No nodes in #{environment}. Done."
-        exit(0)
-      end
-
-      say "Running Chef Client on #{nodes.length} nodes..."
-      nodes.each { |node| ridley.node.chef_run(node.public_hostname) }
-
-      say "Done."
+      run_chef(environment)
     ensure
       file.close(true) if file
     end
@@ -104,11 +130,31 @@ module Berkflow
 
       def ridley
         @ridley ||= Ridley.new(server_url: config.chef.chef_server_url, client_name: config.chef.node_name,
-          client_key: config.chef.client_key, ssh: { user: ENV["USER"], sudo: true })
+          client_key: config.chef.client_key, ssh: {
+            user: @options[:ssh_user], password: @options[:ssh_password], keys: @options[:ssh_key],
+            sudo: use_sudo?
+        })
       end
 
       def config
         Berkshelf::Config.instance
+      end
+
+      def handle_results(result_set)
+        failure,  success = result_set.partition { |result| result.error? }
+        log_dir           = log_results(success, failure)
+        [success, failure, log_dir]
+      end
+
+      def log_results(success, failure)
+        out_dir     = File.join("berkflow_out", Time.now.strftime("%Y%m%d%H%M%S"))
+        success_dir = File.join(out_dir, "success")
+        failure_dir = File.join(out_dir, "failure")
+
+        [success_dir, failure_dir].each { |dir| FileUtils.mkdir_p(dir) }
+        success.each { |result| write_logs(result, success_dir) }
+        failure.each { |result| write_logs(result, failure_dir) }
+        out_dir
       end
 
       def sanitize_version(version)
@@ -136,6 +182,23 @@ module Berkflow
 
       def find_nodes(environment)
         ridley.search(:node, "chef_environment:#{environment}")
+      end
+
+      def use_sudo?
+        @options[:sudo].nil? ? true : @options[:sudo]
+      end
+
+      def write_logs(result, dir)
+        write_stdout(result, dir)
+        write_stderr(result, dir)
+      end
+
+      def write_stdout(result, dir)
+        File.open(File.join(dir, "#{result.host}.stdout"), "w") { |file| file.write(result.stdout) }
+      end
+
+      def write_stderr(result, dir)
+        File.open(File.join(dir, "#{result.host}.stderr"), "w") { |file| file.write(result.stderr) }
       end
   end
 end
