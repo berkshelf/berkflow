@@ -14,7 +14,7 @@ A command line tool for managing Chef Environments using Berkshelf and the [Envi
 
 ### Upgrading a Chef Environment
 
-Berkflow exposes a command for configuring a Chef Environment and running Chef Client on all nodes in that environment.
+Berkflow exposes a command for configuring a Chef Environment to a specific Environment Cookbook version and running Chef Client on all nodes in that environment.
 
     $ blo upgrade myface-dev myface 1.2.3
     Applying cookbook locks to myface-dev...
@@ -22,6 +22,14 @@ Berkflow exposes a command for configuring a Chef Environment and running Chef C
     Running Chef Client on 10 nodes...
     Successfully ran Chef Client on 10 nodes
     Done. See berkflow_out/20140331172904 for logs.
+
+You can also upgrade to the latest version of the cookbook found on the Chef Server by passing `latest`
+
+    $ blo upgrade myface-dev myface latest
+
+or simply leaving the version blank
+
+    $ blo upgrade myface-dev myface
 
 Your Chef Server must meet the following requirements:
 
