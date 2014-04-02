@@ -54,7 +54,7 @@ module Berkflow
     method_option :force,
       type: :boolean,
       aliases: "-f",
-      desc: "force that shit",
+      desc: "Upload cookbooks even if they are already present and frozen.",
       default: false
     desc "install URL", "install Berkshelf package into the Chef Server."
     def install(url)
@@ -192,7 +192,7 @@ module Berkflow
     method_option :force,
       type: :boolean,
       aliases: "-f",
-      desc: "force that shit",
+      desc: "Upgrade an environment even if it's already at the given version.",
       default: false
     desc "upgrade ENV APP [VERSION]", "upgrade an environment to the specified cookbook version."
     long_desc <<-EOH
