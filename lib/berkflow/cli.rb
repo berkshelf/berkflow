@@ -108,6 +108,11 @@ module Berkflow
       failures.empty? ? exit(0) : exit(1)
     end
 
+    method_option :force,
+      type: :boolean,
+      aliases: "-f",
+      desc: "force that shit",
+      default: false
     desc "upgrade ENV APP [VERSION]", "upgrade an environment to the specified cookbook version."
     long_desc <<-EOH
       Upgrades an environment to the specified cookbook version. If no version is given then the latest
@@ -117,6 +122,16 @@ module Berkflow
       version  = sanitize_version(version)
       env      = find_environment!(environment)
       cookbook = find_cookbook!(application, version)
+
+      unless options[:force]
+        if locked = env.cookbook_versions[application]
+          if Solve::Constraint.new(locked).version.to_s == cookbook.version
+            say "Environment already at #{cookbook.version}."
+            say "Done."
+            exit(0)
+          end
+        end
+      end
 
       file = Tempfile.new("berkflow")
       unless contents = cookbook.download_file(:root_file, Berkshelf::Lockfile::DEFAULT_FILENAME, file.path)
@@ -178,7 +193,7 @@ module Berkflow
 
       def find_cookbook!(application, version)
         if version == LATEST
-          unless version = ridley.cookbook.latest_version
+          unless version = ridley.cookbook.latest_version(application)
             error "No versions of Cookbook found: #{application}."
             exit(1)
           end
