@@ -23,6 +23,7 @@ module Berkflow
     namespace "berkflow"
 
     map "up" => :upgrade
+    map "in" => :install
 
     class_option :verbose,
       type: :boolean,
@@ -49,6 +50,86 @@ module Berkflow
       desc: "Perform SSH authentication with the given key",
       aliases: "-P",
       default: nil
+
+    method_option :force,
+      type: :boolean,
+      aliases: "-f",
+      desc: "force that shit",
+      default: false
+    desc "install URL", "install Berkshelf package into the Chef Server."
+    def install(url)
+      require 'uri'
+      require 'open-uri'
+      require 'zlib'
+      require 'rubygems/package'
+
+      if is_url?(url)
+        tempfile = Tempfile.new("berkflow")
+        begin
+          open(url) { |remote_file| tempfile.write(remote_file.read) }
+        rescue OpenURI::HTTPError => ex
+          error "Error retrieving remote package: #{ex.message}."
+          exit(1)
+        end
+        url = tempfile.path
+      end
+
+      unless File.exist?(url)
+        error "Package not found: #{url}."
+        exit(1)
+      end
+
+      tmpdir = Dir.mktmpdir("berkflow")
+
+      begin
+        zlib   = Zlib::GzipReader.new(File.open(url, "rb"))
+        io     = StringIO.new(zlib.read)
+        zlib.close
+
+        Gem::Package::TarReader.new io do |tar|
+          tar.each do |tarfile|
+            destination_file = File.join(tmpdir, tarfile.full_name)
+
+            if tarfile.directory?
+              FileUtils.mkdir_p(destination_file)
+            else
+              destination_directory = File.dirname(destination_file)
+              FileUtils.mkdir_p(destination_directory) unless File.directory?(destination_directory)
+              File.open(destination_file, "wb") { |f| f.print tarfile.read }
+            end
+          end
+        end
+      rescue Zlib::GzipFile::Error => ex
+        error "Error extracting package: #{ex.message}"
+        exit(1)
+      end
+
+      cookbooks_dir = File.join(tmpdir, "cookbooks")
+
+      unless File.exist?(cookbooks_dir)
+        error "Package did not contain a 'cookbooks' directory."
+        exit(1)
+      end
+
+      uploaded = Dir.entries(cookbooks_dir).collect do |path|
+        path = File.join(cookbooks_dir, path)
+        next unless File.cookbook?(path)
+        begin
+          cookbook = Ridley::Chef::Cookbook.from_path(path)
+          say "Uploading #{cookbook.cookbook_name} (#{cookbook.version})"
+          ridley.cookbook.upload(path, freeze: true, force: options[:force])
+          true
+        rescue Ridley::Errors::FrozenCookbook
+          true
+        end
+      end.compact
+
+      say "Uploaded #{uploaded.length} cookbooks."
+      say "Done."
+    ensure
+      tempfile.close(true) if tempfile
+      FileUtils.rm_rf(tmpdir) if tmpdir
+    end
 
     method_option :sudo,
       type: :boolean,
@@ -189,6 +270,10 @@ module Berkflow
       rescue Solve::Errors::InvalidVersionFormat
         error "Invalid version: #{version}. Provide a valid SemVer version string. (i.e. 1.2.3)."
         exit(1)
+      end
+
+      def is_url?(string)
+        string =~ /^#{URI::regexp}$/
       end
 
       def find_cookbook!(application, version)
