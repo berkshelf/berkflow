@@ -1,38 +1,4 @@
 GIT
-  remote: git://github.com/RiotGames/ridley-connectors.git
-  revision: a860b8886a0bc79dc10d51d1cf9b2d1569b189f8
-  branch: bump-ridley
-  specs:
-    ridley-connectors (1.7.1)
-      celluloid (~> 0.16.0.pre)
-      celluloid-io (~> 0.16.0.pre)
-      net-ssh
-      ridley (~> 3.0.0.rc1)
-      winrm (~> 1.1.0)
-
-GIT
-  remote: git://github.com/RiotGames/ridley.git
-  revision: 4f8263cc4257d2fad4382e694945c1894d09b681
-  specs:
-    ridley (3.0.0.rc1)
-      addressable
-      buff-config (~> 0.2)
-      buff-extensions (~> 0.3)
-      buff-ignore (~> 1.1)
-      buff-shell_out (~> 0.1)
-      celluloid (~> 0.16.0.pre)
-      celluloid-io (~> 0.16.0.pre)
-      erubis
-      faraday (~> 0.9.0)
-      hashie (>= 2.0.2)
-      json (>= 1.7.7)
-      mixlib-authentication (>= 1.3.0)
-      net-http-persistent (>= 2.8)
-      retryable
-      solve (>= 0.4.4)
-      varia_model (~> 0.3)
-
-GIT
   remote: git://github.com/berkshelf/berkshelf.git
   revision: b8e3686bbaad37a1559d92d12b61b51d76fad48d
   specs:
@@ -56,7 +22,7 @@ PATH
     berkflow (0.1.0)
       berkshelf (~> 3.0.0.beta8)
       ridley (~> 3.0.0.rc1)
-      ridley-connectors (~> 1.7.0)
+      ridley-connectors (~> 2.0.0.rc1)
       solve
       thor (~> 0.18)
 
@@ -119,6 +85,29 @@ GEM
     rack (1.5.2)
     rake (10.2.2)
     retryable (1.3.5)
+    ridley (3.0.0.rc1)
+      addressable
+      buff-config (~> 0.2)
+      buff-extensions (~> 0.3)
+      buff-ignore (~> 1.1)
+      buff-shell_out (~> 0.1)
+      celluloid (~> 0.16.0.pre)
+      celluloid-io (~> 0.16.0.pre)
+      erubis
+      faraday (~> 0.9.0)
+      hashie (>= 2.0.2)
+      json (>= 1.7.7)
+      mixlib-authentication (>= 1.3.0)
+      net-http-persistent (>= 2.8)
+      retryable
+      solve (>= 0.4.4)
+      varia_model (~> 0.3)
+    ridley-connectors (2.0.0.rc1)
+      celluloid (~> 0.16.0.pre)
+      celluloid-io (~> 0.16.0.pre)
+      net-ssh
+      ridley (~> 3.0.0.rc1)
+      winrm (~> 1.1.0)
     rubyntlm (0.1.1)
     savon (0.9.5)
       akami (~> 1.0)
@@ -158,5 +147,3 @@ DEPENDENCIES
   berkshelf!
   bundler (~> 1.6)
   rake
-  ridley!
-  ridley-connectors!

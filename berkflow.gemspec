@@ -19,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "solve"
-  spec.add_dependency "berkshelf", "~> 3.0.0.beta8"
-  spec.add_dependency "ridley", "~> 3.0.0.rc1"
-  spec.add_dependency "ridley-connectors", "~> 1.7.0"
+  spec.add_dependency "berkshelf",         "~> 3.0.0.beta8"
+  spec.add_dependency "ridley",            "~> 3.0.0.rc1"
+  spec.add_dependency "ridley-connectors", "~> 2.0.0.rc1"
   spec.add_dependency "thor", "~> 0.18"
 
   spec.add_development_dependency "bundler", "~> 1.6"
