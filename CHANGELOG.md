@@ -1,3 +1,8 @@
+# 0.3.0
+
+* Enhancements
+  * Lock gem dependencies to stable versions
+
 # 0.2.0
 
 * Features
