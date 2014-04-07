@@ -1,6 +1,6 @@
 require 'berkflow'
 require 'thor'
-require 'solve'
+require 'semverse'
 require 'tempfile'
 require 'fileutils'
 
@@ -206,7 +206,7 @@ module Berkflow
 
       unless options[:force]
         if locked = env.cookbook_versions[application]
-          if Solve::Constraint.new(locked).version.to_s == cookbook.version
+          if Semverse::Constraint.new(locked).version.to_s == cookbook.version
             say "Environment already at #{cookbook.version}."
             say "Done."
             exit(0)
@@ -266,8 +266,8 @@ module Berkflow
       def sanitize_version(version)
         return version if version == LATEST
 
-        Solve::Version.new(version).to_s
-      rescue Solve::Errors::InvalidVersionFormat
+        Semverse::Version.new(version).to_s
+      rescue Semverse::InvalidVersionFormat
         error "Invalid version: #{version}. Provide a valid SemVer version string. (i.e. 1.2.3)."
         exit(1)
       end
