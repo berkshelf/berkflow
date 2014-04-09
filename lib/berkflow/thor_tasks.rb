@@ -20,8 +20,8 @@ module Berkflow
       required: true,
       aliases: "-t",
       banner: "TOKEN"
-    desc "publish", "Create a Github Release for the current cookbook version."
-    def publish
+    desc "release", "Create a Github Release for the current cookbook version."
+    def release
       cookbook = Ridley::Chef::Cookbook.from_path(Dir.pwd)
       version  = "v#{cookbook.version}"
       begin
