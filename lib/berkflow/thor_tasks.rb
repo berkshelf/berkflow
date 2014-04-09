@@ -30,7 +30,6 @@ module Berkflow
         release = github_client.releases(repository).find { |release| release[:tag_name] == version }
       end
 
-      out_file  = File.join(Dir.pwd, "cookbooks-#{Time.now.to_i}.tar.gz")
       berksfile = Berkshelf::Berksfile.from_file(options[:berksfile])
       pkg_dir   = File.join(File.dirname(File.expand_path(berksfile.filepath)), "pkg")
       out_file  = File.join(pkg_dir, "cookbooks-#{Time.now.to_i}.tar.gz")
