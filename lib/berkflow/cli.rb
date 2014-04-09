@@ -220,6 +220,7 @@ module Berkflow
         exit(1)
       end
 
+      say "Upgrading #{environment} to #{cookbook.version}"
       say "Applying cookbook locks to #{environment}..."
       lockfile = Berkshelf::Lockfile.from_file(file.path)
       unless lockfile.apply(environment)
