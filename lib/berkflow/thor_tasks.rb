@@ -22,10 +22,10 @@ module Berkflow
       banner: "TOKEN"
     desc "release", "Create a Github Release for the current cookbook version."
     def release
-      cookbook = Ridley::Chef::Cookbook.from_path(Dir.pwd)
+      cookbook = Ridley::Chef::Cookbook.from_path(File.dirname(options[:berksfile]))
       version  = "v#{cookbook.version}"
       begin
-        release = github_client.create_release(repository, "v#{cookbook.version}")
+        release = github_client.create_release(repository, version)
       rescue Octokit::UnprocessableEntity
         release = github_client.releases(repository).find { |release| release[:tag_name] == version }
       end
