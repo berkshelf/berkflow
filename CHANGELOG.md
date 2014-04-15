@@ -1,3 +1,8 @@
+# 0.4.0
+
+* Enhancements
+  * Finalize support for Berkshelf 3.0
+
 # 0.3.0
 
 * Enhancements
