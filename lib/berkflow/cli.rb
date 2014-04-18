@@ -24,6 +24,7 @@ module Berkflow
 
     map "up" => :upgrade
     map "in" => :install
+    map ["ver", "-v", "--version"] => :version
 
     class_option :verbose,
       type: :boolean,
@@ -231,6 +232,11 @@ module Berkflow
       run_chef(environment)
     ensure
       file.close(true) if file
+    end
+
+    desc "version", "Display version information"
+    def version
+      say Berkflow::VERSION
     end
 
     private
