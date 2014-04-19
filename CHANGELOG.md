@@ -1,3 +1,9 @@
+# 0.5.0
+
+* Enhancements
+  * Add version command
+  * Bump Octokit constraint ~> 3.0
+
 # 0.4.0
 
 * Enhancements
