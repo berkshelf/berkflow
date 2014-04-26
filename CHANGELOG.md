@@ -1,3 +1,10 @@
+# 0.6.0
+
+* Enhancements
+  * Improve output in Thor release task
+* Bug Fixes
+  * No longer prefix "v" to version tags. This was removed from the SemVer spec in 2.0.0
+
 # 0.5.0
 
 * Enhancements
