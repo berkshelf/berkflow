@@ -23,11 +23,12 @@ module Berkflow
     desc "release", "Create a Github Release for the current cookbook version."
     def release
       cookbook = Ridley::Chef::Cookbook.from_path(File.dirname(options[:berksfile]))
-      version  = "v#{cookbook.version}"
       begin
-        release = github_client.create_release(repository, version)
+        say "Creating GitHub release (#{cookbook.version})"
+        release = github_client.create_release(repository, cookbook.version)
       rescue Octokit::UnprocessableEntity
-        release = github_client.releases(repository).find { |release| release[:tag_name] == version }
+        say "Release already exists, skipping..."
+        release = github_client.releases(repository).find { |release| release[:tag_name] == cookbook.version }
       end
 
       berksfile = Berkshelf::Berksfile.from_file(options[:berksfile])
@@ -36,8 +37,10 @@ module Berkflow
       FileUtils.mkdir_p(pkg_dir)
       berksfile.package(out_file)
 
-      say "Uploading #{File.basename(out_file)} to Github..."
-      github_client.upload_asset(release[:url], out_file, name: "cookbooks.tar.gz", content_type: "application/x-tar")
+      begin
+        say "Uploading #{File.basename(out_file)} to GitHub..."
+        github_client.upload_asset(release[:url], out_file, name: "cookbooks.tar.gz", content_type: "application/x-tar")
+      rescue Errno::EPIPE; end
     end
 
     private
