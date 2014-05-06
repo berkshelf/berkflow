@@ -246,6 +246,8 @@ module Berkflow
           client_key: config.chef.client_key, ssh: {
             user: @options[:ssh_user], password: @options[:ssh_password], keys: @options[:ssh_key],
             sudo: use_sudo?
+        }, ssl: {
+          verify: config.ssl.verify
         })
       end
 
