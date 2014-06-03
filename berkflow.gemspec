@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "semverse",          "~> 1.1"
   spec.add_dependency "berkshelf",         "~> 3.0"
-  spec.add_dependency "ridley",            "~> 3.0"
-  spec.add_dependency "ridley-connectors", "~> 2.0"
+  spec.add_dependency "ridley",            "~> 4.0"
+  spec.add_dependency "ridley-connectors", "~> 2.3"
   spec.add_dependency "thor",              "~> 0.18"
   spec.add_dependency "octokit",           "~> 3.0"
 
