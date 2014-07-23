@@ -4,6 +4,10 @@ A command line tool for managing Chef Environments using Berkshelf and the [Envi
 
 > TLDR of the Environment Cookbook Pattern; You have one top level cookbook that is locked to a Chef Environment. One application per Chef Environment. This Chef Environment is named `{application_name}-{environment}` (i.e. "myface-dev").
 
+## Requirements
+
+* [ChefDK](http://getchef.com/downloads/chef-dk) >= 0.2.0
+
 ## Installation
 
 Install the [Chef-DK](http://getchef.com/downloads/chef-dk) and add it, and it's gem binaries directory to your path
