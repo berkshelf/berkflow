@@ -6,15 +6,15 @@ A command line tool for managing Chef Environments using Berkshelf and the [Envi
 
 ## Installation
 
-Install the [Chef-DK](http://getchef.com/downloads/chef-dk) and add the Chef-DK gem binaries directory to your path
+Install the [Chef-DK](http://getchef.com/downloads/chef-dk) and add it, and it's gem binaries directory to your path
 
-    $ export PATH=/opt/chefdk/embedded/bin:$PATH
+    $ export PATH=$HOME/.chefdk/gem/ruby/2.1.0/bin:/opt/chefdk/bin:$PATH
 
-Install Berkflow as a Chef-DK gem
+Install Berkflow into the ChefDK
 
-    $ sudo chef gem install berkflow
+    $ chef gem install berkflow
     $ which blo
-    /opt/chefdk/embedded/bin/blo
+    /Users/reset/.chefdk/gem/ruby/2.1.0/bin/blo
 
 ## Usage
 
