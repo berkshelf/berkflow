@@ -1,3 +1,11 @@
+# 0.6.1
+
+* Enhancements
+  * Bump required versions of Ridley/Ridley-Connectors. See their changelog for a complete list of fixes.
+
+* Bug Fixes
+  * Honor ssl verify configuration when communicating to Chef Server
+
 # 0.6.0
 
 * Enhancements
