@@ -3,6 +3,14 @@ require 'thor'
 require 'semverse'
 require 'tempfile'
 require 'fileutils'
+require 'celluloid'
+
+module Enumerable
+  def pmap(&block)
+    futures = map { |elem| Celluloid::Future.new(elem, &block) }
+    futures.map { |future| future.value }
+  end
+end
 
 module Berkflow
   class Cli < Thor
@@ -149,7 +157,7 @@ module Berkflow
       end
 
       say "Executing command on #{nodes.length} nodes..."
-      success, failures, out = handle_results nodes.map { |node| ridley.node.run(node.public_hostname, command) }
+      success, failures, out = handle_results nodes.pmap { |node| ridley.node.run(node.public_hostname, command) }
 
       unless success.empty?
         say "Successfully executed command on #{success.length} nodes"
@@ -176,7 +184,7 @@ module Berkflow
       end
 
       say "Running Chef Client on #{nodes.length} nodes..."
-      success, failures, out = handle_results nodes.map { |node| ridley.node.chef_run(node.public_hostname) }
+      success, failures, out = handle_results nodes.pmap { |node| ridley.node.chef_run(node.public_hostname) }
 
       unless success.empty?
         say "Successfully ran Chef Client on #{success.length} nodes"
