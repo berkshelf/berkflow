@@ -1,3 +1,8 @@
+# 0.6.2
+
+* Enhancements
+  * Add --skip-chef-run flag to `blo upgrade` command
+
 # 0.6.1
 
 * Enhancements
