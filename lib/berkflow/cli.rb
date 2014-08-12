@@ -195,7 +195,7 @@ module Berkflow
       aliases: "-f",
       desc: "Upgrade an environment even if it's already at the given version.",
       default: false
-    method_option :skip_run_chef,
+    method_option :skip_chef_run,
       type: :boolean,
       aliases: "-s",
       desc: "Skip running chef-client on nodes in specified environment",
@@ -234,7 +234,7 @@ module Berkflow
         exit(1)
       end
 
-      run_chef(environment) unless options[:skip_run_chef]
+      run_chef(environment) unless options[:skip_chef_run]
     ensure
       file.close(true) if file
     end
