@@ -195,6 +195,11 @@ module Berkflow
       aliases: "-f",
       desc: "Upgrade an environment even if it's already at the given version.",
       default: false
+    method_option :skip_run_chef,
+      type: :boolean,
+      aliases: "-s",
+      desc: "Skip running chef-client on nodes in specified environment",
+      default: false
     desc "upgrade ENV APP [VERSION]", "upgrade an environment to the specified cookbook version."
     long_desc <<-EOH
       Upgrades an environment to the specified cookbook version. If no version is given then the latest
@@ -229,7 +234,7 @@ module Berkflow
         exit(1)
       end
 
-      run_chef(environment)
+      run_chef(environment) unless options[:skip_run_chef]
     ensure
       file.close(true) if file
     end
