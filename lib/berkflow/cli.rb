@@ -74,6 +74,7 @@ module Berkflow
 
       if is_url?(url)
         tempfile = Tempfile.new("berkflow")
+        tempfile.binmode
         begin
           open(url) { |remote_file| tempfile.write(remote_file.read) }
         rescue OpenURI::HTTPError => ex
