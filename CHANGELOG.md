@@ -1,3 +1,8 @@
+# 0.6.3
+
+* Bug Fixes
+  * Fix issue with running berkflow commands on Windows
+
 # 0.6.2
 
 * Enhancements
