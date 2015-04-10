@@ -6,11 +6,11 @@ A command line tool for managing Chef Environments using Berkshelf and the [Envi
 
 ## Requirements
 
-* [ChefDK](http://getchef.com/downloads/chef-dk) >= 0.2.0
+* [Chef-DK](https://downloads.chef.io/chef-dk/) >= 0.2.0
 
 ## Installation
 
-Install the [Chef-DK](http://getchef.com/downloads/chef-dk) and add it, and it's gem binaries directory to your path
+Install the [Chef-DK](https://downloads.chef.io/chef-dk/) and add it, and it's gem binaries directory to your path
 
     $ export PATH=/opt/chefdk/bin:$HOME/.chefdk/gem/ruby/2.1.0/bin:$PATH
 
