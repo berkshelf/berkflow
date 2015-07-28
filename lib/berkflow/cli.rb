@@ -145,6 +145,12 @@ module Berkflow
       type: :boolean,
       desc: "Execute with sudo",
       default: false
+    method_option :connect_attribute,
+      aliases: "-a",
+      type: :string,
+      desc: "The attribute to use for opening the connection",
+      enum: ["ipv4", "hostname"],
+      default: "hostname"
     desc "exec ENV CMD", "execute an arbitrary shell command on all nodes in an environment."
     def exec(environment, command)
       env = find_environment!(environment)
@@ -158,7 +164,9 @@ module Berkflow
       end
 
       say "Executing command on #{nodes.length} nodes..."
-      success, failures, out = handle_results nodes.pmap { |node| ridley.node.run(node.public_hostname, command) }
+      success, failures, out = handle_results nodes.pmap { |node|
+        ridley.node.run connect_address(node, options), command
+      }
 
       unless success.empty?
         say "Successfully executed command on #{success.length} nodes"
@@ -172,6 +180,12 @@ module Berkflow
       failures.empty? ? exit(0) : exit(1)
     end
 
+    method_option :connect_attribute,
+      aliases: "-a",
+      type: :string,
+      desc: "The attribute to use for opening the connection",
+      enum: ["ipv4", "hostname"],
+      default: "hostname"
     desc "run_chef ENV", "run chef on all nodes in the given environment."
     def run_chef(environment)
       env = find_environment!(environment)
@@ -185,7 +199,9 @@ module Berkflow
       end
 
       say "Running Chef Client on #{nodes.length} nodes..."
-      success, failures, out = handle_results nodes.pmap { |node| ridley.node.chef_run(node.public_hostname) }
+      success, failures, out = handle_results nodes.pmap { |node|
+        ridley.node.chef_run connect_address(node, options)
+      }
 
       unless success.empty?
         say "Successfully ran Chef Client on #{success.length} nodes"
@@ -209,6 +225,12 @@ module Berkflow
       aliases: "-s",
       desc: "Skip running chef-client on nodes in specified environment",
       default: false
+    method_option :connect_attribute,
+      aliases: "-a",
+      type: :string,
+      desc: "The attribute to use for opening the connection",
+      enum: ["ipv4", "hostname"],
+      default: "hostname"
     desc "upgrade ENV APP [VERSION]", "upgrade an environment to the specified cookbook version."
     long_desc <<-EOH
       Upgrades an environment to the specified cookbook version. If no version is given then the latest
@@ -267,6 +289,17 @@ module Berkflow
 
       def config
         Berkshelf::Config.instance
+      end
+
+      def connect_address(node, options)
+        address = case options[:connect_attribute].downcase
+        when "ipv4"
+          node.public_ipv4
+        when "hostname"
+          node.public_hostname
+        else
+          node.public_hostname
+        end
       end
 
       def handle_results(result_set)
