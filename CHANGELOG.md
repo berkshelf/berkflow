@@ -1,3 +1,11 @@
+# 0.7.0
+
+* Enhancements
+  * Add `--connect-attribute` flag (`-a`) to specify using public hostname or ipv4 when connecting to nodes
+
+* Bug Fixes
+  * Silence erroneous error and warning outputs
+
 # 0.6.3
 
 * Bug Fixes
