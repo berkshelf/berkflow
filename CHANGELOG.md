@@ -1,3 +1,7 @@
+# 0.8.0
+
+* Bump Berkshelf requirement to `~> 4.0`
+
 # 0.7.0
 
 * Enhancements
