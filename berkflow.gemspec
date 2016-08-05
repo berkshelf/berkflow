@@ -17,14 +17,15 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
+  spec.required_ruby_version = ">= 2.1.0"
 
-  spec.add_dependency "semverse",          "~> 1.1"
-  spec.add_dependency "berkshelf",         "~> 4.0"
-  spec.add_dependency "ridley",            "~> 4.0"
+  spec.add_dependency "semverse",          ">= 1.0", "< 3.0"
+  spec.add_dependency "berkshelf",         ">= 4.0", "< 6.0"
+  spec.add_dependency "ridley",            ">= 4.0", "< 6.0"
   spec.add_dependency "ridley-connectors", "~> 2.3"
   spec.add_dependency "thor",              "~> 0.18"
   spec.add_dependency "octokit",           "~> 4.0"
 
-  spec.add_development_dependency "bundler", "~> 1.5"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
 end
