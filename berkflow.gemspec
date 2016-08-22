@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jamie@vialstudios.com"]
   spec.summary       = %q{A Cookbook-Centric Deployment workflow tool}
   spec.description   = %q{A CLI for managing Chef Environments using Berkshelf and the Environment Cookbook Pattern.}
-  spec.homepage      = "https://github.com/reset/berkflow"
+  spec.homepage      = "https://github.com/berkshelf/berkflow"
   spec.license       = "Apache 2.0"
 
   spec.files         = `git ls-files -z`.split("\x0")
