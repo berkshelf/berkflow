@@ -4,6 +4,11 @@ A command line tool for managing Chef Environments using Berkshelf and the [Envi
 
 > TLDR of the Environment Cookbook Pattern; You have one top level cookbook that is locked to a Chef Environment. One application per Chef Environment. This Chef Environment is named `{application_name}-{environment}` (i.e. "myface-dev").
 
+
+### Note
+
+This project is currently unmaintained. It may work, but we would advise against adopting this workflow if you are a new user.
+
 ## Requirements
 
 - [Chef-DK](https://downloads.chef.io/chef-dk/) >= 0.2.0
